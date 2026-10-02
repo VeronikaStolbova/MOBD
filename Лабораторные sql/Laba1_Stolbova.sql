@@ -34,7 +34,7 @@ CREATE TABLE products (
     seller_id   BIGINT NOT NULL REFERENCES sellers(id) ON DELETE RESTRICT,
     category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
     title       TEXT NOT NULL,
-    price       NUMERIC(10,2) NOT NULL CHECK (price > 0),
+    price       NUMERIC(12,2) NOT NULL CHECK (price > 0),
     is_active   BOOLEAN NOT NULL DEFAULT TRUE,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -73,7 +73,7 @@ CREATE TABLE order_items (
     order_id   BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
     quantity   INTEGER NOT NULL CHECK (quantity > 0),
-    unit_price NUMERIC(10,2) NOT NULL CHECK (unit_price > 0),
+    unit_price NUMERIC(12,2) NOT NULL CHECK (unit_price > 0),
     PRIMARY KEY (order_id, product_id)
 );
 
@@ -81,7 +81,7 @@ CREATE TABLE order_items (
 CREATE TABLE payments (
     id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_id BIGINT NOT NULL UNIQUE REFERENCES orders(id) ON DELETE RESTRICT,
-    amount   NUMERIC(10,2) NOT NULL CHECK (amount > 0),
+    amount   NUMERIC(12,2) NOT NULL CHECK (amount > 0),
     status   VARCHAR(20) NOT NULL DEFAULT 'pending',
     paid_at  TIMESTAMPTZ
 );
