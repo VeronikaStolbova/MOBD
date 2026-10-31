@@ -70,14 +70,13 @@ ORDER BY день
 LIMIT 20;
 
 --Задание 6. Сравнение оконной функции и обычной группировки
---Способ 2 - без оконных функций
-SELECT c.name AS категория, t.товар, t.цена
-FROM categories c
-JOIN LATERAL (
-    SELECT p.title AS товар, p.price AS цена
-    FROM products p
-    WHERE p.category_id = c.id
-    ORDER BY p.price DESC
-    LIMIT 3
-) t ON true
-ORDER BY категория, цена DESC;
+-- Способ 2: Обычная группировка
+SELECT c.name AS категория, p.title AS товар, p.price AS цена
+FROM products p
+JOIN categories c ON c.id = p.category_id
+JOIN (
+    SELECT category_id, MAX(price) AS max_price 
+    FROM products 
+    GROUP BY category_id
+) AS top ON top.category_id = p.category_id AND top.max_price = p.price
+ORDER BY категория;
